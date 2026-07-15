@@ -1,0 +1,30 @@
+services:
+  backend:
+    build:
+      context: ./rest-api
+    container_name: rest-api
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/laika-rest-api
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./laika
+    container_name: laika
+    ports:
+      - "8080:8080"
+    environment:
+      - API_BASE_URL=http://rest-api:8000
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    tmpfs:
+      - /data/db
